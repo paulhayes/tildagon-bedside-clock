@@ -10,7 +10,7 @@ from machine import RTC
 import ntptime
 import power
 
-class Liquid(app.App):
+class BedsideClock(app.App):
 
     timeout = 5000
 
@@ -34,7 +34,7 @@ class Liquid(app.App):
         # if self.button_states.get(BUTTON_TYPES[""])
         self.down=self.imuToScreen( self.normalize(imu.acc_read()) )
         self.angular_speed = 0.95*self.angular_speed + 10*delta*self.calc_angle(self.down,self.current)
-        if self.angular_speed>0.5:
+        if abs(self.angular_speed)>0.5:
             self.last_interaction = self.runtime
         self.awake = (self.last_interaction+self.timeout) > self.runtime 
         self.current = self.normalize( self.rotate(self.current,self.angular_speed*delta) )
@@ -138,4 +138,4 @@ class Liquid(app.App):
                     v[0]*math.sin(a)+v[1]*math.cos(a)
                 )
 
-__app_export__  = Liquid
+__app_export__  = BedsideClock
